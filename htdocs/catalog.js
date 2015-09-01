@@ -11,8 +11,4 @@ var fetch = ud.defn(module, function(cb) {
 });
 
 
-if(module.hot) {
-  module.hot.addStatusHandler(console.log.bind(console));
-}
-
 module.exports = fetch;

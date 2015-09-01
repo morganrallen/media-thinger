@@ -12,10 +12,6 @@ server.io = io;
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
 server.use(restify.bodyParser());
-server.use(function(res, req, next) {
-  console.log(req.req.url);
-  next();
-});
 
 require("./lib/browserify")(server);
 require("./lib/catalog")(server);

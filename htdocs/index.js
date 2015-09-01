@@ -4,7 +4,6 @@ var request = require("browser-request");
 var videojs = require("video.js");
 
 var elVideo = document.createElement("video");
-
 elVideo.className = "video-js";
 elVideo.id = "video_" + Date.now();
 
@@ -18,8 +17,13 @@ var player = videojs(elVideo, {
 });
 elVideo.controls = true;
 
-function play(video) {
-  elVideo.src = "/play?video=" + video;
+function play(video, type) {
+  elVideo.setAttribute("type", type);
+
+  player.src({
+    src: "/play?video=" + video,
+    type: type
+  });
   player.play();
 }
 
@@ -32,17 +36,29 @@ elList.addEventListener("click", function(evt) {
     return;
   }
 
-  play(t.getAttribute("data-url"));
+  play(t.getAttribute("data-url"), t.getAttribute("data-mime"));
 }, false);
 
 var catalog = require("./catalog");
 
-catalog(function(err, xhr, res) {
-  var list = "";
+function fetch() {
+  catalog(function(err, xhr, res) {
+    var list = "";
 
-  for(var i = 0; i < res.length; i++) {
-    list += "<li data-url=\"" + res[i] + "\">" + res[i].split("/").pop() + "</li>";
-  }
+    for(var filename in res) {
+      var entry = res[filename];
 
-  elList.innerHTML = list;
-});
+      list += "<li data-mime=\"" + entry.mime + "\" data-url=\"" + filename + "\">" + filename.split("/").pop() + "</li>";
+    }
+
+    elList.innerHTML = list;
+  });
+}
+
+fetch();
+
+var refresh = document.createElement("div");
+refresh.class = "button refresh";
+document.body.appendChild(refresh);
+refresh.textContent = "REFRESH";
+refresh.addEventListener("click", fetch, false);
