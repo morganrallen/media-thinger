@@ -25,11 +25,15 @@ var b = browserify(xtend(watchify.args, {
   debug: true
 }));
 
-var w = watchify(b);
-w.on("update", console.log.bind(console));
-w.plugin(hmr, {});
-
+b.plugin(hmr, {});
 b.add("./htdocs/index.js");
+
+var w = watchify(b);
+w.on("update", function(files) {
+  console.log(files);
+  w.bundle().on("error", console.log.bind(console));
+});
+
 w.bundle().on("error", console.log.bind(console));
 
 server.get("/app.js", function(req, res) {

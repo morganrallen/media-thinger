@@ -10,12 +10,13 @@ elVideo.id = "video_" + Date.now();
 
 document.body.appendChild(elVideo);
 
+
 var player = videojs(elVideo, {
   controls: true
 }, function() {
   console.log("have you got a video?");
 });
-
+elVideo.controls = true;
 
 function play(video) {
   elVideo.src = "/play?video=" + video;
