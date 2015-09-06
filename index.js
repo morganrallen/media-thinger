@@ -3,7 +3,7 @@
 var restify = require("restify");
 
 var server = restify.createServer({
-  name: "CrackLeader"
+  name: "media-thinger"
 });
 
 var io = require("socket.io").listen(server.server);
