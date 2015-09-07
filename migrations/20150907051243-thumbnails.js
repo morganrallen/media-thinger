@@ -1,25 +1,21 @@
 "use strict";
 
 exports.up = function(db, callback) {
-  db.createTable("media", {
+  db.createTable("thumbnails", {
     id: {
       autoIncrement: true,
-      type: "int",
-      primary: true
+      primary: true,
+      type: "int"
     },
 
-    name: "string",
+    mediaId: "int",
     file: {
       type: "string",
       unique: true
-    },
-    added: {
-      type: "datetime",
-      defaultValue: new String("CURRENT_TIMESTAMP")
     }
   }, callback);
 };
 
 exports.down = function(db, callback) {
-  db.dropTable("media", callback);
+  db.dropTable("thumbnails", callback);
 };
