@@ -1,7 +1,9 @@
 "use strict";
 
+var sqlite = require("sqlite3");
 var restify = require("restify");
 
+var db = new sqlite.Database("./db/media.sqlite");
 var server = restify.createServer({
   name: "media-thinger"
 });
@@ -14,7 +16,7 @@ server.use(restify.queryParser());
 server.use(restify.bodyParser());
 
 require("./lib/browserify")(server);
-require("./lib/catalog")(server);
+require("./routes/catalog")(server, db);
 
 server.get("/", restify.serveStatic({
   default: "index.html",
@@ -22,7 +24,8 @@ server.get("/", restify.serveStatic({
 }));
 
 var port = process.env.PORT || 8088;
+var host = process.env.HOST || "0.0.0.0";
 
-server.listen(port, function() {
-  console.log("Server listening: %s", port);
+server.listen(port, host, function() {
+  console.log("Server listening: http://%s", server.server._connectionKey.slice(2));
 });
