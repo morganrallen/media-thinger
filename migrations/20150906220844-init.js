@@ -4,12 +4,16 @@ var type = dbm.dataType;
 exports.up = function(db, callback) {
   db.createTable("media", {
     id: {
+      autoIncrement: true,
       type: "int",
       primary: true
     },
 
     name: "string",
-    file: "string",
+    file: {
+      type: "string",
+      unique: true
+    },
     added: {
       type: "datetime",
       defaultValue: new String("CURRENT_TIMESTAMP")
