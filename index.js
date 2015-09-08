@@ -16,7 +16,8 @@ server.use(restify.queryParser());
 server.use(restify.bodyParser());
 
 require("./lib/browserify")(server);
-require("./routes/catalog")(server, db);
+var catalog = require("./routes/catalog")(server, db);
+require("./lib/thumbnailer")(catalog, db);
 
 server.get("/", restify.serveStatic({
   default: "index.html",

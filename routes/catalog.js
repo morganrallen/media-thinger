@@ -43,4 +43,6 @@ module.exports = function(server, db) {
       res.end();
     }
   });
+
+  return catalog;
 };

@@ -4,8 +4,8 @@ exports.up = function(db, callback) {
   db.createTable("thumbnails", {
     id: {
       autoIncrement: true,
-      primary: true,
-      type: "int"
+      type: "int",
+      primary: true
     },
 
     mediaId: "int",
