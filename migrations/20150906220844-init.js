@@ -5,7 +5,7 @@ exports.up = function(db, callback) {
     id: {
       autoIncrement: true,
       type: "int",
-      primary: true
+      primaryKey: true
     },
 
     name: "string",
