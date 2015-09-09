@@ -8,8 +8,23 @@ module.exports = function(server, db) {
 
   server.get("/list", function(req, res) {
     res.setHeader("content-type", "text/json");
-    catalog.list(function(results) {
-      res.end(JSON.stringify(results));
+    res.write("[");
+
+    var tr = catalog.list();
+
+    var first = true;
+    tr.on("data", function(data) {
+      if(first) {
+        first = false;
+      } else {
+        res.write(",");
+      }
+
+      res.write(JSON.stringify(data));
+    });
+
+    tr.on("end", function() {
+      res.end("]");
     });
   });
 
