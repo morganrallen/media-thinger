@@ -1,7 +1,9 @@
 "use strict";
 
+var path = require("path");
 var sqlite = require("sqlite3");
 var restify = require("restify");
+var ecstatic = require("ecstatic");
 
 var db = new sqlite.Database("./db/media.sqlite");
 var server = restify.createServer({
@@ -18,6 +20,15 @@ server.use(restify.bodyParser());
 require("./lib/browserify")(server);
 var catalog = require("./routes/catalog")(server, db);
 require("./lib/thumbnailer")(catalog, db);
+
+var stat = ecstatic({
+  baseDir: "tn",
+  root: __dirname + "/thumbnails/"
+});
+
+server.get(/\/tn\/.*/, function(req, res, next) {
+  stat(req, res, next);
+});
 
 server.get("/", restify.serveStatic({
   default: "index.html",
