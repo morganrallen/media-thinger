@@ -45,8 +45,9 @@ function fetch() {
   catalog(function(err, xhr, res) {
     var list = "";
 
-    for(var filename in res) {
-      var entry = res[filename];
+    for(var i = 0; i < res.length; i++) {
+      var entry = res[i];
+      var filename = entry.file;
 
       list += "<li data-mime=\"" + entry.mime + "\" data-url=\"" + filename + "\">" + filename.split("/").pop() + "</li>";
     }
