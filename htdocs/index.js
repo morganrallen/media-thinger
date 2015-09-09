@@ -11,7 +11,9 @@ document.body.appendChild(elVideo);
 
 
 var player = videojs(elVideo, {
-  controls: true
+  controls: true,
+  height: 340,
+  width: "100%"
 }, function() {
   console.log("have you got a video?");
 });
@@ -32,8 +34,8 @@ document.body.appendChild(elList);
 elList.addEventListener("click", function(evt) {
   var t = evt.target;
 
-  if(t.localName !== "li") {
-    return;
+  while(t.localName !== "li" && t.parentNode !== t) {
+    t = t.parentNode;
   }
 
   play(t.getAttribute("data-url"), t.getAttribute("data-mime"));
@@ -49,12 +51,26 @@ function fetch() {
       var entry = res[i];
       var filename = entry.file;
 
-      list += "<li data-mime=\"" + entry.mime + "\" data-url=\"" + filename + "\">" + filename.split("/").pop() + "</li>";
+      list += "<li class=\"gallery-video\" data-mime=\"" + entry.mime + "\" data-url=\"" + filename + "\">";
+
+      if(entry.thumbnails.length > 0) {
+        list += "<img src=\"/tn/" + entry.thumbnails[0] + "\" />";
+      }
+
+      list += "<div>" + filename.split("/").pop() + "</div>";
+
+      list += "</li>";
     }
 
     elList.innerHTML = list;
   });
 }
+
+setInterval(function() {
+  var i;
+  var img = elList.querySelectorAll("img")[i = Math.floor(Math.random() * (elList.childNodes.length - 1))];
+  img.src = img.src.replace(/_[0-9]\.png$/, "_" + Math.round(Math.random() * 4) + ".png");
+}, 1000);
 
 fetch();
 
