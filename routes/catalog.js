@@ -31,32 +31,28 @@ module.exports = function(server, db) {
   server.get("/play", function(req, res) {
     var file = req.query.video;
 
-    if(catalog.files[file]) {
-      fs.stat(file, function(err, stat) {
-        if(err) {
-          console.log(err);
-        }
+    fs.stat(file, function(err, stat) {
+      if(err) {
+        console.log(err);
+      }
 
-        var range = req.headers.range.match(/bytes=([0-9]+)-([0-9]+)?(?:\/([0-9]+))?/);
+      var range = req.headers.range.match(/bytes=([0-9]+)-([0-9]+)?(?:\/([0-9]+))?/);
 
-        var start = parseInt(range[1]);
-        var status = 206;
-        var end = stat.size - 1;
+      var start = parseInt(range[1]);
+      var status = 206;
+      var end = stat.size - 1;
 
-        res.writeHeader(status, {
-          "Content-Type": mime.lookup(file),
-          "Content-Length": stat.size - start,
-          "Content-Range": "bytes " + start + "-" + end + "/" + stat.size
-        });
-
-        fs.createReadStream(file, {
-          end: end,
-          start: start
-        }).pipe(res);
+      res.writeHeader(status, {
+        "Content-Type": mime.lookup(file),
+        "Content-Length": stat.size - start,
+        "Content-Range": "bytes " + start + "-" + end + "/" + stat.size
       });
-    } else {
-      res.end();
-    }
+
+      fs.createReadStream(file, {
+        end: end,
+        start: start
+      }).pipe(res);
+    });
   });
 
   return catalog;
