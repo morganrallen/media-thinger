@@ -1,9 +1,16 @@
 "use strict";
 
+var fs = require("fs");
 var path = require("path");
 var sqlite = require("sqlite3");
 var restify = require("restify");
 var ecstatic = require("ecstatic");
+
+try {
+  fs.statSync(path.join(__dirname, "db"));
+} catch(e) {
+  fs.mkdir(path.join(__dirname, "db"));
+}
 
 var db = new sqlite.Database("./db/media.sqlite");
 var server = restify.createServer({
