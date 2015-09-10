@@ -36,22 +36,26 @@ module.exports = function(server, db) {
         console.log(err);
       }
 
-      var range = req.headers.range.match(/bytes=([0-9]+)-([0-9]+)?(?:\/([0-9]+))?/);
+      if(req.headers.range) {
+        var range = req.headers.range.match(/bytes=([0-9]+)-([0-9]+)?(?:\/([0-9]+))?/);
 
-      var start = parseInt(range[1]);
-      var status = 206;
-      var end = stat.size - 1;
+        var start = parseInt(range[1]);
+        var status = 206;
+        var end = stat.size - 1;
 
-      res.writeHeader(status, {
-        "Content-Type": mime.lookup(file),
-        "Content-Length": stat.size - start,
-        "Content-Range": "bytes " + start + "-" + end + "/" + stat.size
-      });
+        res.writeHeader(status, {
+          "Content-Type": mime.lookup(file),
+          "Content-Length": stat.size - start,
+          "Content-Range": "bytes " + start + "-" + end + "/" + stat.size
+        });
 
-      fs.createReadStream(file, {
-        end: end,
-        start: start
-      }).pipe(res);
+        fs.createReadStream(file, {
+          end: end,
+          start: start
+        }).pipe(res);
+      } else {
+        fs.createReadStream(file).pipe(res);
+      }
     });
   });
 
